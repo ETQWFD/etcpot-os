@@ -1,31 +1,43 @@
-# 刷写指南（FLASHING.md）
+# 刷写指南（GSI）
 
-## 准备
+EtcPot OS 以 **GSI（通用系统镜像）** 形式发布：一个 `system.img`，
+刷进任意 **Android 8+、支持 Treble 的 arm64 手机**（Pixel、小米、一加、三星
+新款等），保留手机原厂内核和基带，只替换 system 分区。
 
-- 已解锁 bootloader 的 Android 设备（推荐 Pixel 系列开发版）
-- USB 数据线
-- `android-platform-tools`（adb / fastboot）
+## 兼容性自检
+手机需满足：
+- arm64 架构
+- 已解锁 bootloader
+- 支持 Project Treble（`adb shell getprop ro.treble.enabled` 返回 true）
 
-## 步骤
+## 方式一：fastboot 直刷（推荐）
 
-1. 手机进入 fastboot：关机后按住 `音量下 + 电源`。
-2. 连接电脑，确认：
-   ```bash
-   fastboot devices
-   ```
-3. 一键刷写：
-   ```bash
-   bash installer/install.sh out/target/product/etcpot/etcpot-1.0-image.zip
-   ```
-4. 设备自动重启，首次开机 2-3 分钟。
+```bash
+# 1. 手机进 fastboot（关机后 音量下+电源）
+fastboot devices
+
+# 2. 进入 fastbootd（动态分区机型）
+fastboot reboot fastboot
+# 3. 刷 GSI system
+fastboot flash system system.img
+fastboot reboot
+```
+
+首次开机 5-10 分钟（DEX 优化）。
+
+## 方式二：Recovery sideload
+把 `etcpot-gsi-arm64.zip` 拷到手机，TWRP/Recovery 里选「Apply update」刷入。
+
+## 虚拟机 / 模拟器
+```bash
+emulator -system system.img -partition-size 4096
+```
+
+## 不会变砖的前提
+- 刷 GSI 不动 boot/modem/vendor，出问题 `fastboot flash system 原厂镜像` 即可救回。
+- 建议先备份原厂 system。
+- 少数深度定制机型（vivo/OPPO）需先刷 TWRP，不保证全部可用。
 
 ## 验证
-
-开机后进入「设置 → 关于 EtcPot」，应看到：
-
-- 设备名称：EtcPot OS
-- 版本：EtcPot-1.0
-- Android 安全补丁：随 AOSP 16
-- 桌面为 EtcPotLauncher（C++ 自渲染）
-- 音量面板为新圆角半透明样式
-- 开机动画为你提供的视频
+开机后「设置 → 关于 EtcPot」应显示 EtcPot OS 1.0，开机动画为猫耳少女，
+桌面为 C++ 自渲染桌面；开发者选项开「Root 模式」重启即 root。
