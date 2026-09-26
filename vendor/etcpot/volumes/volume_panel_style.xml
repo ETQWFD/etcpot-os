@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  EtcPot OS — redesigned volume panel style
+  Installed to /system/etc/vol/volume_panel_style.xml.
+  Read by SystemUI VolumeDialogImpl at boot; the style is heavily
+  rounded, translucent, with a HarmonyOS-like accent and a slim track.
+-->
+<volume_panel>
+    <window>
+        <width>360dp</width>
+        <marginTop>80dp</marginTop>
+        <background>#CC14141C</background>
+        <cornerRadius>40dp</cornerRadius>
+        <blurRadius>30</blurRadius>
+    </window>
+    <title>
+        <text>EtcPot 音量</text>
+        <textColor>#FFFFFFFF</textColor>
+        <textSize>15sp</textSize>
+        <gravity>start</gravity>
+    </title>
+    <slider>
+        <trackHeight>8dp</trackHeight>
+        <trackRadius>4dp</trackRadius>
+        <trackBackground>#33FFFFFF</trackBackground>
+        <progressColor>#FF6EE7FF</progressColor>
+        <thumbRadius>14dp</thumbRadius>
+        <thumbColor>#FFFFFFFF</thumbColor>
+        <thumbShadow>elevation 6dp</thumbShadow>
+    </slider>
+    <icon>
+        <size>28dp</size>
+        <tint>#FFFFFFFF</tint>
+    </icon>
+    <animation>
+        <enter>translateY(-20dp) alpha(0) -> 0 alpha(1), 220ms decel</enter>
+        <exit>translateY(0) -> -20dp alpha(1) -> 0, 160ms accel</exit>
+    </animation>
+</volume_panel>

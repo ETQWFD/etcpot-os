@@ -1,0 +1,26 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: EtcPot <et2416444244@outlook.com>
+Date: Sat, 26 Sep 2026 17:10:00 +0800
+Subject: [PATCH 3/3] Load custom volume panel style at boot
+
+Make SystemUI read /system/etc/vol/volume_panel_style.xml and apply
+the EtcPot translucent rounded design instead of the stock panel.
+---
+ .../systemui/volume/VolumeDialogImpl.java      |  6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/packages/apps/SystemUI/src/com/android/systemui/volume/VolumeDialogImpl.java b/packages/apps/SystemUI/src/com/android/systemui/volume/VolumeDialogImpl.java
+--- a/packages/apps/SystemUI/src/com/android/systemui/volume/VolumeDialogImpl.java
++++ b/packages/apps/SystemUI/src/com/android/systemui/volume/VolumeDialogImpl.java
+@@ -120,6 +120,12 @@ public class VolumeDialogImpl implements VolumeDialog, Dumpable {
+     private void loadStyle() {
++        // EtcPot: load custom panel style if present
++        File customStyle = new File("/system/etc/vol/volume_panel_style.xml");
++        if (customStyle.exists()) {
++            mStyle = EtcPotVolumeStyleParser.parse(customStyle);
++            return;
++        }
+         mStyle = StockVolumeStyle.DEFAULT;
+     }
+--
+2.34.1

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  EtcPot OS — framework-res overlay
+  Overrides strings/res/values/strings.xml in frameworks/base to rebrand
+  "Android" / stock labels to "EtcPot OS".
+-->
+<resources>
+    <!-- The user-visible OS name in "About phone" and system UI -->
+    <string name="android_version">EtcPot OS 1.0</string>
+    <string name="model_unknown">EtcPot OS</string>
+    <string name="device_provisioned_property_name">ro.product.device</string>
+
+    <!-- Recovery / bootloader strings -->
+    <string name="android_recovery">EtcPot Recovery</string>
+
+    <!-- Shutdown / reboot labels -->
+    <string name="reboot_to_recovery">重启到 EtcPot Recovery</string>
+    <string name="power_dialog_title">EtcPot OS</string>
+
+    <!-- Volume panel default title -->
+    <string name="volume_dialog_title">EtcPot 音量</string>
+</resources>

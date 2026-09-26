@@ -1,0 +1,32 @@
+// EtcPotLauncher — HarmonyOS-style launcher written in C++ via NDK.
+//
+// Builds as an Android APK whose main activity is a native_activity
+// (NativeActivity NDK). All UI (workspace, app drawer, dynamic wallpaper,
+// widget host) is drawn by our own OpenGL ES renderer — no Java/Kotlin
+// launcher code, no Launcher3.
+
+cc_binary {
+    name: "EtcPotLauncher",
+    srcs: [
+        "jni/main.cpp",
+        "jni/workspace.cpp",
+        "jni/app_drawer.cpp",
+        "jni/dynamic_wallpaper.cpp",
+    ],
+    cflags: [
+        "-Wall",
+        "-Wextra",
+        "-O2",
+        "-fvisibility=hidden",
+    ],
+    shared_libs: [
+        "liblog",
+        "libandroid",
+        "libEGL",
+        "libGLESv3",
+        "libdl",
+        "libnative_activity",
+        "libandroid_runtime",
+    ],
+    static_libs: [],
+}

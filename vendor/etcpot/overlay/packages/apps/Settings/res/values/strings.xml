@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Settings app overlay: rename "Android" references to EtcPot OS -->
+<resources>
+    <string name="settings_app_name">EtcPot 设置</string>
+    <string name="about_settings">关于 EtcPot</string>
+    <string name="device_model">EtcPot OS 1.0</string>
+    <string name="firmware_version">EtcPot-1.0</string>
+    <string name="status_information">状态信息</string>
+</resources>

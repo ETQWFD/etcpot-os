@@ -1,0 +1,39 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: EtcPot <et2416444244@outlook.com>
+Date: Sat, 26 Sep 2026 17:05:00 +0800
+Subject: [PATCH 2/3] Remove stock Launcher3; default to EtcPotLauncher
+
+Stop building Launcher3 / Launcher3QuickStep. Mark EtcPotLauncher as
+the default HOME activity in the product makefile.
+---
+ .../target/product/base_system.mk              |  3 ---
+ vendor/etcpot/etcpot.mk                       | 12 ++++++++++++
+ 2 files changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/build/make/target/product/base_system.mk b/build/make/target/product/base_system.mk
+--- a/build/make/target/product/base_system.mk
++++ b/build/make/target/product/base_system.mk
+@@ -40,9 +40,6 @@ PRODUCT_PACKAGES += \
+     Keyguard \
+     LatinIME \
+     Launcher3 \
+-    Launcher3QuickStep \
+-    ManagedProvisioning \
+-    MmsService \
+ ...
+diff --git a/vendor/etcpot/etcpot.mk b/vendor/etcpot/etcpot.mk
+--- a/vendor/etcpot/etcpot.mk
++++ b/vendor/etcpot/etcpot.mk
+@@ -10,6 +10,18 @@ PRODUCT_PACKAGES += \
+     EtcPotBootAnimation \
+     EtcPotVolumePanel \
+     EtcPotLauncher
++
++# Declare EtcPotLauncher as the default HOME intent handler
++PRODUCT_PROPERTY_OVERRIDES += \
++    ro.config.default_home=com.etcpot.launcher/.MainActivity
++
++# Ensure stock launcher is not installed
++PRODUCT_PACKAGES := $(filter-out Launcher3 Launcher3QuickStep,$(PRODUCT_PACKAGES))
+--
+2.34.1
