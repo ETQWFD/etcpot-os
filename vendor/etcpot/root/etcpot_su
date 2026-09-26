@@ -1,0 +1,17 @@
+#!/system/bin/sh
+# EtcPot su — gated root shell.
+# Only works when Developer-options -> Root mode is ON (persist.sys.root_mode=1).
+# Otherwise refuses, so the phone looks un-rooted to apps.
+
+MODE=$(getprop persist.sys.root_mode)
+if [ "$MODE" != "1" ]; then
+    echo "EtcPot: root mode is OFF. Enable it in Developer options." >&2
+    exit 1
+fi
+
+# Allow adb shell to escalate; for other callers, require confirmation later.
+export PATH=/sbin:/system/sbin:/system/bin:/system/xbin
+case "$(id -u)" in
+    0)  exec "$@" ;;
+    *)  exec su 0 "$@" 2>/dev/null || exec /system/bin/sh -c "$*" ;;
+esac

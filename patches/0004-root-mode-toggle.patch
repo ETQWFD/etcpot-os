@@ -1,0 +1,40 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: EtcPot <et2416444244@outlook.com>
+Date: Sat, 26 Sep 2026 18:35:00 +0800
+Subject: [PATCH 4/5] Add "Root mode" toggle to Developer options
+
+Adds a switch in Settings -> Developer options that toggles
+persist.sys.root_mode. When on, /system/bin/su is made setuid root
+and the phone is effectively pre-rooted (no separate Magisk flash needed).
+---
+ .../development/DevelopmentSettings.java    | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/packages/apps/Settings/src/com/android/settings/development/DevelopmentSettings.java b/packages/apps/Settings/src/com/android/settings/development/DevelopmentSettings.java
+--- a/packages/apps/Settings/src/com/android/settings/development/DevelopmentSettings.java
++++ b/packages/apps/Settings/src/com/android/settings/development/DevelopmentSettings.java
+@@ -180,6 +180,28 @@ public class DevelopmentSettings extends SettingsPreferenceFragment
+         mDevelopmentPreferences.getEditText().addTextChangedListener(mDevStringListener);
++
++        // EtcPot: Root mode switch
++        SwitchPreference rootMode = (SwitchPreference) findPreference("etcpot_root_mode");
++        boolean rootOn = "1".equals(SystemProperties.get("persist.sys.root_mode", "0"));
++        rootMode.setChecked(rootOn);
++        rootMode.setOnPreferenceChangeListener((pref, val) -> {
++            boolean on = (Boolean) val;
++            SystemProperties.set("persist.sys.root_mode", on ? "1" : "0");
++            // Trigger selinux/permissive and su perms via init property handlers
++            return true;
++        });
++
++        Preference rebootRequired = findPreference("etcpot_root_reboot_note");
++        rebootRequired.setOnPreferenceClickListener(p -> {
++            new AlertDialog.Builder(getActivity())
++                .setTitle("重启使 root 生效？")
++                .setPositiveButton("重启", (d,w) -> ShutdownUtil.reboot("etcpot_root"))
++                .setNegativeButton("取消", null).show();
++            return true;
++        });
+     }
+--
+2.34.1

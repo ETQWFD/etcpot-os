@@ -1,0 +1,13 @@
+// EtcPot root-mode preference XML (overlay on Settings development_prefs.xml)
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="EtcPot 高级">
+        <SwitchPreference
+            android:key="etcpot_root_mode"
+            android:title="Root 模式"
+            android:summary="开启后无需单独 Root，即可获得 root 权限（su）" />
+        <Preference
+            android:key="etcpot_root_reboot_note"
+            android:title="重启使 Root 生效"
+            android:summary="修改后需要重启手机才能完全生效" />
+    </PreferenceCategory>
+</PreferenceScreen>

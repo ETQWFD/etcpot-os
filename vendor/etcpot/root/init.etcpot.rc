@@ -1,0 +1,16 @@
+# init.etcpot.rc — EtcPot OS root-mode gating.
+# On every boot, read persist.sys.root_mode and set su permissions accordingly.
+
+on property:persist.sys.root_mode=1
+    chmod 06755 /system/bin/su
+    chown root shell /system/bin/su
+    write /sys/kernel/security/etcpot_root enabled
+
+on property:persist.sys.root_mode=0
+    chmod 0755 /system/bin/su
+    chown root root /system/bin/su
+    write /sys/kernel/security/etcpot_root disabled
+
+on boot
+    # Apply current state
+    setprop persist.sys.root_mode $(getprop persist.sys.root_mode)

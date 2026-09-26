@@ -32,3 +32,9 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# EtcPot large binary release assets (uploaded to GitHub Release, not git)
+vendor/etcpot/bootanimation/bootanimation.zip
+out/
+*.img
+*.zip
