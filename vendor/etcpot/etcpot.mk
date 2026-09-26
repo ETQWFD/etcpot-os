@@ -25,7 +25,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.build.version.release=12 \
     ro.etcpot.version=1.0 \
     ro.etcpot.build.type=user \
-    ro.etcpot.arch=arm64
+    ro.etcpot.arch=arm64 \
+    ro.etcpot.developer=ETC
 
 # Root mode: shipped pre-rooted, gated by a Developer-options toggle.
 # persist.sys.root_mode = 1 -> su available
@@ -53,6 +54,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     EtcPotSu \
     EtcPotInitRoot
+
+# System apps: ETCAS screen-casting tool (com.etc.cas) ----------------------
+PRODUCT_PACKAGES += \
+    ETCASCast
 
 # Remove stock launcher ------------------------------------------------------
 PRODUCT_PACKAGES += \

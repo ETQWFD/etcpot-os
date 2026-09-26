@@ -1,0 +1,12 @@
+// EtcPot OS — prebuilt system apps
+// ETCASCast (com.etc.cas) shipped as a system app in /system/app/.
+
+android_app_import {
+    name: "ETCASCast",
+    apk: "ETCASCast.apk",
+    certificate: "platform",
+    privileged: true,
+    dex_preopt: {
+        enabled: false,
+    },
+}
