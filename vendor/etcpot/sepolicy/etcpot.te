@@ -1,0 +1,4 @@
+# EtcPot sepolicy: allow su when root_mode=1
+allow su shell:process { execmem };
+allow su system_file:file entrypoint;
+allow shell su:process transition;
