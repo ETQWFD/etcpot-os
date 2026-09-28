@@ -3,83 +3,178 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>EtcPot OS — 基于 AOSP 12 的自定义安卓系统</title>
+<title>EtcPot OS — 自定义安卓系统</title>
 <style>
   :root { color-scheme: dark; }
-  * { box-sizing: border-box; }
-  body { margin:0; font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
-         background: radial-gradient(1200px 600px at 70% -10%, #1b3a6b 0%, #0a0f1e 60%);
-         color:#e8ecf4; min-height:100vh; }
-  nav { padding: 20px 32px; display:flex; justify-content:space-between; align-items:center; }
-  nav .brand { font-weight:700; letter-spacing:1px; }
-  nav a { color:#9ecbff; text-decoration:none; margin-left:18px; font-size:14px; }
-  header { padding: 80px 32px 40px; max-width: 980px; margin:0 auto; }
-  h1 { font-size: 56px; line-height:1.1; margin:0 0 18px;
-       background: linear-gradient(90deg,#6ee7ff,#a78bfa); -webkit-background-clip:text; background-clip:text; color:transparent; }
-  header p.lead { font-size:18px; color:#b8c2d6; max-width:640px; }
-  .cta { margin-top: 28px; display:flex; gap:12px; flex-wrap:wrap; }
-  .btn { display:inline-block; padding:12px 22px; border-radius:12px; font-weight:600;
-         text-decoration:none; }
-  .btn.primary { background: linear-gradient(90deg,#38bdf8,#818cf8); color:#0b1220; }
-  .btn.ghost { border:1px solid #334466; color:#e8ecf4; }
-  section.features { max-width:980px; margin:40px auto; padding:0 32px;
-                     display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:18px; }
-  .card { background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
-          border-radius:16px; padding:22px; }
-  .card h3 { margin:0 0 8px; font-size:17px; }
-  .card p { margin:0; color:#aab4cc; font-size:14px; line-height:1.6; }
-  footer { text-align:center; color:#6b7590; padding:40px 20px; font-size:13px; }
-  footer a { color:#9ecbff; text-decoration:none; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #0a0f1e;
+    color: #e8ecf4;
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+  .bg {
+    position: fixed; inset: 0; z-index: -1;
+    background:
+      radial-gradient(800px 400px at 80% 0%, rgba(99,102,241,.25), transparent),
+      radial-gradient(600px 300px at 10% 20%, rgba(56,189,248,.15), transparent),
+      #0a0f1e;
+  }
+  nav {
+    padding: 18px 32px; display: flex; justify-content: space-between; align-items: center;
+    max-width: 1100px; margin: 0 auto;
+  }
+  nav .brand { font-weight: 800; font-size: 20px; letter-spacing: 1px; }
+  nav .brand span { color: #38bdf8; }
+  nav .links a { color: #9ecbff; text-decoration: none; margin-left: 20px; font-size: 14px; }
+  nav .links a:hover { color: #fff; }
+
+  header { max-width: 1100px; margin: 0 auto; padding: 60px 32px 30px; text-align: center; }
+  h1 {
+    font-size: 64px; font-weight: 800; line-height: 1.1; margin-bottom: 16px;
+    background: linear-gradient(90deg, #38bdf8, #a78bfa, #f472b6);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  header .sub { font-size: 18px; color: #94a3b8; max-width: 600px; margin: 0 auto; }
+  .badges { margin-top: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .badge {
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+    padding: 4px 14px; border-radius: 20px; font-size: 13px; color: #9ecbff;
+  }
+
+  .section { max-width: 1100px; margin: 0 auto; padding: 30px 32px; }
+  .section-title { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+  .section-desc { color: #94a3b8; margin-bottom: 24px; font-size: 15px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
+  .card {
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 16px; padding: 24px;
+    transition: transform .2s, border-color .2s;
+  }
+  .card:hover { transform: translateY(-3px); border-color: rgba(99,102,241,.4); }
+  .card .icon { font-size: 32px; margin-bottom: 12px; }
+  .card h3 { font-size: 18px; margin-bottom: 6px; }
+  .card .size { color: #64748b; font-size: 13px; margin-bottom: 12px; }
+  .card p { color: #aab4cc; font-size: 14px; margin-bottom: 16px; }
+  .dl {
+    display: inline-block; padding: 10px 20px; border-radius: 10px;
+    background: linear-gradient(90deg, #38bdf8, #818cf8);
+    color: #0b1220; font-weight: 700; text-decoration: none; font-size: 14px;
+  }
+  .dl:hover { opacity: .9; }
+  .dl.alt { background: rgba(255,255,255,.1); color: #e8ecf4; }
+
+  .note {
+    background: rgba(250,204,21,.08); border: 1px solid rgba(250,204,21,.2);
+    border-radius: 12px; padding: 16px 20px; margin: 24px 0;
+    color: #fde68a; font-size: 14px;
+  }
+
+  footer { text-align: center; padding: 40px 20px; color: #475569; font-size: 13px; }
+  footer a { color: #9ecbff; text-decoration: none; }
 </style>
 </head>
 <body>
-  <nav>
-    <div class="brand">EtcPot OS</div>
-    <div>
-      <a href="https://github.com/ETQWFD/etcpot-os">源码</a>
-      <a href="https://github.com/ETQWFD/etcpot-os/releases">下载</a>
-      <a href="https://github.com/ETQWFD/etcpot-os/blob/main/docs/BUILD.md">构建文档</a>
-    </div>
-  </nav>
+<div class="bg"></div>
 
-  <header>
-    <h1>EtcPot OS</h1>
-    <p class="lead">基于 AOSP 16 的自定义安卓系统。全局重命名、全新圆角音量面板、C/C++ 自渲染桌面（仿 HarmonyOS NEXT）、极光动态壁纸、一键刷写安装。</p>
-    <div class="cta">
-      <a class="btn primary" href="https://github.com/ETQWFD/etcpot-os/releases">下载镜像</a>
-      <a class="btn ghost" href="https://github.com/ETQWFD/etcpot-os">在 GitHub 上查看</a>
-    </div>
-  </header>
+<nav>
+  <div class="brand">Etc<span>Pot</span> OS</div>
+  <div class="links">
+    <a href="#download">下载</a>
+    <a href="#features">特性</a>
+    <a href="https://github.com/ETQWFD/etcpot-os" target="_blank">GitHub</a>
+  </div>
+</nav>
 
-  <section class="features">
-    <div class="card"><h3>全局品牌重命名</h3><p>系统属性、framework-res、设置应用全部替换为 EtcPot OS。</p></div>
-    <div class="card"><h3>全新音量面板</h3><p>半透明圆角设计，HarmonyOS 风格滑块与动画。</p></div>
-    <div class="card"><h3>C/C++ 桌面</h3><p>NDK + OpenGL ES 自渲染，移除 Launcher3，上滑抽屉。</p></div>
-    <div class="card"><h3>极光动态壁纸</h3><p>GLSL 流动渐变背景，随时间漂移。</p></div>
-    <div class="card"><h3>自定义开机动画</h3><p>支持把视频一键转成 AOSP bootanimation.zip。</p></div>
-    <div class="card"><h3>一键安装</h3><p>Linux / macOS / Windows 脚本，fastboot 全自动刷写。</p></div>
-  </section>
+<header>
+  <h1>EtcPot OS</h1>
+  <p class="sub">基于 Android 12 的深度定制系统。预装 Root、华为风格桌面、ETCASCast 投屏工具、120fps 开机动画。</p>
+  <div class="badges">
+    <span class="badge">Android 12</span>
+    <span class="badge">Root 内置</span>
+    <span class="badge">ARM64 / ARM32 / x86</span>
+    <span class="badge">v1.0</span>
+  </div>
+</header>
 
-  <section class="features" id="download">
+<section class="section" id="download">
+  <h2 class="section-title">📥 下载</h2>
+  <p class="section-desc">选择适合你的版本。所有文件均可在 GitHub Releases 下载。</p>
+
+  <div class="grid">
     <div class="card">
-      <h3>📱 真机 GSI (arm64)</h3>
-      <p>Android 12 arm64 GSI，fastboot 刷入 system 分区。</p>
-      <p><a class="btn primary" style="margin-top:10px;padding:8px 16px;font-size:13px" href="https://github.com/ETQWFD/etcpot-os/releases/download/v1.0/EtcPot-1.0-arm64-GSI.img.xz">下载 1.0 GB</a></p>
+      <div class="icon">📱</div>
+      <h3>真机 GSI (arm64)</h3>
+      <div class="size">1.0 GB · Android 12</div>
+      <p>64位手机通用 GSI，支持 Project Treble 设备。fastboot 刷入 system 分区即可。</p>
+      <a class="dl" href="https://github.com/ETQWFD/etcpot-os/releases/download/v1.0/EtcPot-1.0-arm64-GSI.img.xz">下载 arm64 GSI</a>
     </div>
-    <div class="card">
-      <h3>📱 真机 GSI (arm32)</h3>
-      <p>Android 12 32位 arm GSI，适配老旧机型。</p>
-      <p><a class="btn primary" style="margin-top:10px;padding:8px 16px;font-size:13px" href="https://github.com/ETQWFD/etcpot-os/releases/download/v1.0/EtcPot-1.0-arm32-GSI.img.xz">下载 703 MB</a></p>
-    </div>
-    <div class="card">
-      <h3>💻 VMware ISO (x86_64)</h3>
-      <p>开机 3 秒自动安装到磁盘，重启即进系统。</p>
-      <p><a class="btn primary" style="margin-top:10px;padding:8px 16px;font-size:13px" href="https://github.com/ETQWFD/etcpot-os/releases/download/v1.0/EtcPot-1.0-VMware.iso">下载 922 MB</a></p>
-    </div>
-  </section>
 
-  <footer>
-    © 2026 EtcPot · <a href="https://github.com/ETQWFD/etcpot-os">github.com/ETQWFD/etcpot-os</a> · Apache-2.0
-  </footer>
+    <div class="card">
+      <div class="icon">📱</div>
+      <h3>真机 GSI (arm32)</h3>
+      <div class="size">703 MB · Android 12</div>
+      <p>32位老设备 GSI，适配老旧手机和平板。</p>
+      <a class="dl" href="https://github.com/ETQWFD/etcpot-os/releases/download/v1.0/EtcPot-1.0-arm32-GSI.img.xz">下载 arm32 GSI</a>
+    </div>
+
+    <div class="card">
+      <div class="icon">💻</div>
+      <h3>VMware 虚拟机包</h3>
+      <div class="size">899 MB · 已装好系统</div>
+      <p>解压后双击 .vmx 直接在 VMware Player 启动，预装完整系统，开机进桌面。</p>
+      <a class="dl" href="https://github.com/ETQWFD/etcpot-os/releases/download/v1.0/EtcPot-VMware.tar.gz">下载 VMware 包</a>
+    </div>
+
+    <div class="card">
+      <div class="icon">🖥️</div>
+      <h3>QEMU 一键启动包</h3>
+      <div class="size">906 MB · Windows/Linux</div>
+      <p>解压后双击启动脚本，自动用 QEMU 运行系统，无需配置。</p>
+      <a class="dl" href="https://github.com/ETQWFD/etcpot-os/releases/download/v1.0/EtcPot-OS-VM-QEMU.tar.gz">下载 QEMU 包</a>
+    </div>
+
+    <div class="card">
+      <div class="icon">💿</div>
+      <h3>VMware ISO 镜像</h3>
+      <div class="size">922 MB · x86_64</div>
+      <p>可引导 ISO，支持 VMware/VirtualBox/QEMU 光驱启动，Live 模式直接运行。</p>
+      <a class="dl alt" href="https://github.com/ETQWFD/etcpot-os/releases/download/v1.0/EtcPot-1.0-VMware.iso">下载 ISO</a>
+    </div>
+
+    <div class="card">
+      <div class="icon">🎬</div>
+      <h3>开机动画包</h3>
+      <div class="size">636 MB · 120fps</div>
+      <p>猫耳少女开机动画，600帧 720×1280，可刷入任意 Android 系统。</p>
+      <a class="dl alt" href="https://github.com/ETQWFD/etcpot-os/releases/download/v1.0/bootanimation.zip">下载开机动画</a>
+    </div>
+  </div>
+
+  <div class="note">
+    ⚠️ <strong>首次启动虚拟机请等待 30-60 秒</strong>，系统需要初始化。如遇黑屏，请在 VMware 设置中关闭"加速3D图形"。
+  </div>
+</section>
+
+<section class="section" id="features">
+  <h2 class="section-title">✨ 系统特性</h2>
+  <p class="section-desc">EtcPot OS 内置定制功能。</p>
+  <div class="grid">
+    <div class="card"><h3>Root 内置</h3><p>开发者选项中开启 Root 模式，无需额外刷入 SuperSU/Magisk。</p></div>
+    <div class="card"><h3>ETCASCast 投屏</h3><p>预装投屏工具，支持无线投屏到电视/电脑。</p></div>
+    <div class="card"><h3>华为风格桌面</h3><p>仿 HarmonyOS 桌面布局，卡片式服务卡片。</p></div>
+    <div class="card"><h3>自定义光标</h3><p>全套定制鼠标指针，二次元风格。</p></div>
+    <div class="card"><h3>120fps 开机动画</h3><p>高帧率猫耳少女开机动画。</p></div>
+    <div class="card"><h3>品牌重命名</h3><p>系统属性全部改为 EtcPot OS，设置界面显示定制品牌。</p></div>
+  </div>
+</section>
+
+<footer>
+  © 2026 EtcPot OS · <a href="https://github.com/ETQWFD/etcpot-os">GitHub</a> ·
+  <a href="https://github.com/ETQWFD/etcpot-os/releases">Releases</a>
+</footer>
 </body>
 </html>
