@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ETCPOT OS — 下载统计后台</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23E8590C'/%3E%3Ctext x='32' y='44' font-family='monospace' font-size='34' font-weight='700' fill='%23fff' text-anchor='middle'%3EET%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --paper:#F6F5F2;
+  --ink:#1D1D1B;
+  --ink-2:#5A5A55;
+  --line:#D8D5CE;
+  --accent:#E8590C;
+  --accent-dark:#C2450A;
+  --code:#2B2B28;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  font-size:16px;line-height:1.75;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px}
+a{color:var(--accent-dark);text-decoration:none}
+a:hover{text-decoration:underline}
+
+.topbar{border-bottom:1px solid var(--line);padding:14px 0;font-size:14px}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:8px;font-weight:700}
+.brand .mark{
+  width:26px;height:26px;border-radius:5px;background:var(--accent);color:#fff;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:ui-monospace,monospace;font-size:13px;font-weight:800;
+}
+.nav{display:flex;gap:18px}
+.nav a{color:var(--ink-2)}
+.nav a:hover{color:var(--accent-dark);text-decoration:none}
+
+.hero{padding:40px 0 24px}
+.hero h1{font-size:26px;font-weight:900;letter-spacing:-.3px;margin-bottom:4px}
+.hero p{color:var(--ink-2);font-size:14px}
+
+/* 汇总卡 */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}
+.stat{
+  background:#fff;border:1px solid var(--line);padding:16px 18px;
+}
+.stat .num{
+  font-family:ui-monospace,monospace;font-size:30px;font-weight:800;
+  color:var(--accent-dark);line-height:1.1;
+}
+.stat .lab{font-size:12px;color:var(--ink-2);margin-top:4px}
+
+section{padding:18px 0;border-top:1px solid var(--line)}
+h2{font-size:18px;font-weight:800;margin-bottom:14px}
+
+table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border:1px solid var(--line)}
+th{text-align:left;font-weight:600;color:var(--ink-2);padding:9px 12px;border-bottom:1px solid var(--line);font-size:12px}
+td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+.fname{font-family:ui-monospace,monospace;font-size:12px;word-break:break-all}
+.tag{font-family:ui-monospace,monospace;font-size:12px;color:var(--accent-dark);white-space:nowrap}
+.num-c{font-family:ui-monospace,monospace;text-align:right}
+.ver-row td{background:#FBF7F2;font-weight:700;font-family:ui-monospace,monospace;font-size:13px}
+.empty{color:var(--ink-2);font-size:13px}
+
+/* 登录 */
+#gate{position:fixed;inset:0;background:var(--paper);display:flex;align-items:center;justify-content:center;z-index:99}
+#gate .box{background:#fff;border:1px solid var(--line);padding:30px;width:min(360px,90vw)}
+#gate h1{font-size:18px;font-weight:800;margin-bottom:6px}
+#gate p{font-size:13px;color:var(--ink-2);margin-bottom:16px}
+#gate input{
+  width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:3px;
+  font-size:16px;margin-bottom:12px;font-family:ui-monospace,monospace;
+  font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",ui-monospace,monospace,system-ui,sans-serif;
+}
+#gate button{
+  width:100%;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:3px;
+  font-size:14px;font-weight:600;cursor:pointer;
+  font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+}
+#gate .err{color:#B3261E;font-size:12px;margin-top:8px;display:none}
+
+footer{border-top:1px solid var(--line);padding:24px 0 36px;font-size:12px;color:var(--ink-2)}
+footer a{color:var(--ink-2)}
+
+@media (max-width:640px){
+  .stats{grid-template-columns:1fr}
+  .stat .num{font-size:24px}
+  table{font-size:12px}
+  th:nth-child(1),td:nth-child(1){display:none}
+}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="box">
+    <h1>ETCPOT OS 后台</h1>
+    <p>输入访问码进入下载统计。</p>
+    <input type="password" id="pw" placeholder="访问码" autocomplete="off">
+    <button id="btnGo">进入</button>
+    <div class="err" id="err">访问码不对</div>
+  </div>
+</div>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand"><span class="mark">ET</span>ETCPOT OS 后台</div>
+    <nav class="nav">
+      <a href="index.html">官网</a>
+      <a href="https://github.com/ETQWFD/etcpot-os" target="_blank" rel="noopener">仓库</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="hero">
+    <h1>下载统计</h1>
+    <p>数据来自 GitHub Releases API，每次下载实时累计，无法手工改。</p>
+    <div class="stats">
+      <div class="stat"><div class="num" id="sTotal">—</div><div class="lab">总下载次数（全部版本）</div></div>
+      <div class="stat"><div class="num" id="sLatest">—</div><div class="lab">最新版本</div></div>
+      <div class="stat"><div class="num" id="sFiles">—</div><div class="lab">镜像文件总数</div></div>
+    </div>
+  </header>
+
+  <section>
+    <h2>每个文件的下载数</h2>
+    <div id="tblBox"><div class="empty">加载中…</div></div>
+    <p class="empty" style="margin-top:10px" id="apiNote"></p>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>ETCPOT OS 2.0 · 后台为静态统计页（GitHub Pages），访问码仅作前端保护，无法提供真正的账号安全。</span>
+  </div>
+</footer>
+
+<script>
+var ACCESS = "etcpot2026";
+var API = "https://api.github.com/repos/ETQWFD/etcpot-os/releases?per_page=30";
+
+function fmt(n){return Number(n).toLocaleString("zh-CN");}
+function fmtSize(b){
+  if(!b) return "—";
+  var g=b/1024/1024/1024, m=b/1024/1024;
+  return g>=1 ? g.toFixed(1)+" GB" : m.toFixed(0)+" MB";
+}
+
+function gate(){
+  if(sessionStorage.getItem("etcpot_admin")==="1"){
+    document.getElementById("gate").style.display="none";
+    load();
+  }
+}
+document.getElementById("btnGo").onclick=function(){
+  var v=document.getElementById("pw").value;
+  if(v===ACCESS){
+    sessionStorage.setItem("etcpot_admin","1");
+    document.getElementById("gate").style.display="none";
+    load();
+  }else{
+    document.getElementById("err").style.display="block";
+  }
+};
+document.getElementById("pw").addEventListener("keydown",function(e){
+  if(e.key==="Enter") document.getElementById("btnGo").click();
+});
+
+function load(){
+  fetch(API)
+    .then(function(r){ return r.json(); })
+    .then(function(rels){
+      if(!Array.isArray(rels)) throw new Error("bad response");
+      var total=0, files=0, rows=[];
+      rels.forEach(function(rel){
+        if(!rel.assets || !rel.assets.length) return;
+        var sub=[];
+        rel.assets.forEach(function(a){
+          total += a.download_count; files++;
+          sub.push(
+            "<tr>"+
+            "<td class='fname'>"+a.name+"</td>"+
+            "<td class='num-c'>"+fmt(a.download_count)+"</td>"+
+            "<td class='num-c'>"+fmtSize(a.size)+"</td>"+
+            "</tr>"
+          );
+        });
+        rows.push(
+          "<tr class='ver-row'><td colspan='3'>"+rel.tag_name+" · "+rel.name+" · "+rel.published_at.slice(0,10)+"</td></tr>"+
+          sub.join("")
+        );
+      });
+      document.getElementById("sTotal").textContent=fmt(total);
+      document.getElementById("sFiles").textContent=String(files);
+      document.getElementById("sLatest").textContent=rels.length?rels[0].tag_name:"—";
+      document.getElementById("tblBox").innerHTML=
+        "<table><thead><tr><th>文件</th><th style='width:110px;text-align:right'>下载次数</th><th style='width:90px;text-align:right'>大小</th></tr></thead><tbody>"+
+        rows.join("")+"</tbody></table>";
+    })
+    .catch(function(e){
+      document.getElementById("tblBox").innerHTML=
+        "<div class='empty'>加载失败："+e.message+"（GitHub API 未认证限流 60 次/小时/IP，稍后再试或换个网络）</div>";
+    });
+}
+gate();
+</script>
+</body>
+</html>
