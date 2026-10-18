@@ -165,20 +165,19 @@ footer a:hover{color:var(--accent-dark)}
       <a href="#features">特性</a>
       <a href="#flash">刷机</a>
       <a href="#history">版本</a>
-      <a href="admin.html">后台</a>
     </nav>
   </div>
 </div>
 
 <header class="hero">
   <div class="wrap">
-    <span class="ver">v3.0 · ANDROID 14 · ARM64 / ARM32</span>
+    <span class="ver">v4.0 · 虚拟机自动安装 ISO（x86_64 / x86 32 位）</span>
     <h1>ETCPOT OS 2.0</h1>
-    <p class="lead">一个刷进去就能用的定制系统。系统名、桌面、开机动画、锁屏引导全部替换，不显示任何原生安卓痕迹。内置 root，游戏和检测工具认不出它是什么系统。</p>
+    <p class="lead">一个刷进去就能用的定制系统。系统名、桌面、开机动画、锁屏引导全部替换，不显示任何原生安卓痕迹。内置 root，游戏和检测工具认不出它是什么系统。虚拟机版为自动安装 ISO：加载后自动装到磁盘、自动重启进桌面。</p>
     <div class="meta">
-      <span>基于 Android 14（Evolution X 8.0）</span>
-      <span>GSI 通用镜像</span>
-      <span>fastboot 直接刷</span>
+      <span>真机：Android 14 / 13（ARM64 / ARM32）</span>
+      <span>虚拟机：Android 9 x86（自动安装 ISO）</span>
+      <span>内置 root · 反检测 · 定制动画</span>
     </div>
   </div>
 </header>
@@ -186,17 +185,29 @@ footer a:hover{color:var(--accent-dark)}
 <section id="download">
   <div class="wrap">
     <h2>下载</h2>
-    <p class="sec-sub">全部为 xz 压缩的 system 镜像，解压后是一个 system.img。直接 fastboot 刷入即可。</p>
+    <p class="sec-sub">虚拟机版为自安装 ISO（64/32 位，加载即自动安装 → 重启进桌面）；真机版为 xz 压缩的 GSI system 镜像，fastboot 直接刷。因 Android 14 无 x86 官方源，虚拟机版基于 Android 9（x86 平台最后通用版）深度定制，品牌、动画、桌面与真机版一致。</p>
     <table class="dl-table">
       <thead>
         <tr><th>文件</th><th>版本</th><th>说明</th><th></th></tr>
       </thead>
       <tbody>
         <tr>
+          <td class="fname">ETCPOT-OS-2.0-x64-auto.iso</td>
+          <td class="fver">v4.0 · VM 64 位</td>
+          <td class="fdesc">784 MB · 虚拟机自动安装 ISO（x86_64），VMware / QEMU / VirtualBox 直接加载，自动安装进桌面</td>
+          <td><a class="btn" href="https://github.com/ETQWFD/etcpot-os/releases/download/v4.0/ETCPOT-OS-2.0-x64-auto.iso">下载</a></td>
+        </tr>
+        <tr>
+          <td class="fname">ETCPOT-OS-2.0-x86-auto.iso</td>
+          <td class="fver">v4.0 · VM 32 位</td>
+          <td class="fdesc">731 MB · 虚拟机自动安装 ISO（x86 32 位），老配置电脑 / 32 位虚拟机可用</td>
+          <td><a class="btn" href="https://github.com/ETQWFD/etcpot-os/releases/download/v4.0/ETCPOT-OS-2.0-x86-auto.iso">下载</a></td>
+        </tr>
+        <tr>
           <td class="fname">ETCPOT-2.0-A14-arm64-GSI.img.xz</td>
           <td class="fver">v3.0 · A14</td>
-          <td class="fdesc">1.7 GB · 64 位通用 GSI，Android 14 深度定制</td>
-          <td><a class="btn" href="https://github.com/ETQWFD/etcpot-os/releases/download/v3.0/ETCPOT-2.0-A14-arm64-GSI.img.xz">下载</a></td>
+          <td class="fdesc">1.7 GB · 64 位通用 GSI，Android 14 深度定制（真机）</td>
+          <td><a class="btn ghost" href="https://github.com/ETQWFD/etcpot-os/releases/download/v3.0/ETCPOT-2.0-A14-arm64-GSI.img.xz">下载</a></td>
         </tr>
         <tr>
           <td class="fname">ETCPOT-2.0-A13-arm32-GSI.img.xz</td>
@@ -312,7 +323,7 @@ footer a:hover{color:var(--accent-dark)}
 <footer>
   <div class="wrap">
     <span>ETCPOT OS 2.0 · 深度定制安卓系统</span>
-    <span><a href="https://github.com/ETQWFD/etcpot-os" target="_blank" rel="noopener">GitHub 仓库</a> · <a href="admin.html">下载统计后台</a></span>
+    <span><a href="https://github.com/ETQWFD/etcpot-os" target="_blank" rel="noopener">GitHub 仓库</a></span>
   </div>
 </footer>
 
